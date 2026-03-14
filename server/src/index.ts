@@ -1,8 +1,13 @@
 import Fastify from 'fastify'
+import websocket from '@fastify/websocket'
 import mqtt, { MqttClient } from 'mqtt'
+import { WebSocket } from 'ws'
 import {saveMeasure } from './db.ts'
 
 const fastify = Fastify({ logger: true })
+fastify.register(websocket)
+
+const WSClients: WebSocket[] = []
 
 interface SensorPayload {
   value: number
@@ -15,6 +20,8 @@ mqttClient.on('connect', () => {
   mqttClient.subscribe('maison/salon/#')
 })
 
+
+// MQTT 
 mqttClient.on('message', async(topic: string, message: Buffer) => {
 
   const [id_1,id_2,id_3,metric] = topic.split('/')
@@ -23,7 +30,19 @@ mqttClient.on('message', async(topic: string, message: Buffer) => {
 
 
   const payload: SensorPayload = JSON.parse(message.toString())
+  WSClients.forEach((WSClient)=> WSClient.send(payload.value))
   await saveMeasure(deviceId, metric, payload.value)
+})
+
+// FASTIFY
+fastify.register(async function (fastify) {
+  fastify.get('/temperature', { websocket: true }, (socket, req ) => {
+   //on veut avoir tout les clients connecté au WS dans une variable
+    WSClients.push(socket)  
+    //un client se deco du websocket on le dégage
+    socket.on('close', () => {
+      WSClients.splice(WSClients.indexOf(socket), 1)
+    })  
 })
 
 await fastify.listen({ port: 3000 })
