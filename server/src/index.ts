@@ -30,8 +30,10 @@ mqttClient.on('message', async(topic: string, message: Buffer) => {
 
 
   const payload: SensorPayload = JSON.parse(message.toString())
-  WSClients.forEach((WSClient)=> WSClient.send(payload.value))
-  await saveMeasure(deviceId, metric, payload.value)
+  const saveResult = await saveMeasure(deviceId, metric, payload.value)
+
+  WSClients.forEach((WSClient)=> WSClient.send(JSON.stringify({value: payload.value, time:saveResult})))
+
 })
 
 // FASTIFY
@@ -42,7 +44,8 @@ fastify.register(async function (fastify) {
     //un client se deco du websocket on le dégage
     socket.on('close', () => {
       WSClients.splice(WSClients.indexOf(socket), 1)
-    })  
+    })
+  })
 })
 
 await fastify.listen({ port: 3000 })

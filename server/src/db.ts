@@ -8,10 +8,12 @@ const pool = new pg.Pool({
   password: 'iot',
 })
 
-export async function saveMeasure(sensorId: string, metric: string, value: number) {
-  await pool.query(
+export async function saveMeasure(sensorId: string, metric: string, value: number): Promise<Date>  {
+  const result = await pool.query(
     `INSERT INTO sensor_readings (sensor_id, metric, value)
-     VALUES ($1, $2, $3)`,
+     VALUES ($1, $2, $3) RETURNING time`,
     [sensorId, metric, value]
   )
+
+  return result.rows[0].time
 }
