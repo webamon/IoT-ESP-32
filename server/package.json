@@ -2,7 +2,8 @@
   "name": "server",
   "type": "module",
   "scripts": {
-    "dev": "npx tsx src/index.ts"
+    "dev": "npx tsx src/index.ts",
+    "start": "npx tsx src/index.ts"
   },
   "dependencies": {
     "@fastify/websocket": "^11.2.0",
