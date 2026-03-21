@@ -19,5 +19,12 @@ services:
     volumes:
       - timescaledb_data:/var/lib/postgresql/data
 
+  server:
+    build: ./server
+    ports: 
+      - "3000:3000"
+    depends_on:
+      - mosquitto
+      - timescaledb
 volumes:
   timescaledb_data:
