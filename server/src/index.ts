@@ -7,7 +7,7 @@ const fastify = Fastify({ logger: true })
 await fastify.register(websocket)
 
 fastify.register(async (fastify) => {
-  fastify.get('/temperature', { websocket: true }, (socket) => {
+  fastify.get('/sensor-measures', { websocket: true }, (socket) => {
     addWSClient(socket)
   })
 })

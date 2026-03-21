@@ -11,10 +11,10 @@ export function startMqttListener(): void {
   })
 
   client.on('message', async (topic, message) => {
-    const [id_1, id_2, id_3, metric] = topic.split('/')
-    const deviceId = `${id_1}_${id_2}_${id_3}`
-    const { value } = JSON.parse(message.toString())
-    const sensorData = await handleSensorData(deviceId, metric, value)
+    const [home, room, deviceId] = topic.split('/')
+
+    const { measures } = JSON.parse(message.toString())
+    const sensorData = await handleSensorData(deviceId, measures)
     broadcastWS(sensorData)
   })
 }
