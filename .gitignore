@@ -88,3 +88,6 @@ typings/
 .dynamodb/
 
 context.md
+
+# Root-level package lock (prettier tooling only, no app code)
+package-lock.json
