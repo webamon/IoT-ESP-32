@@ -21,10 +21,13 @@ services:
 
   server:
     build: ./server
-    ports: 
+    ports:
       - "3000:3000"
     depends_on:
       - mosquitto
       - timescaledb
+    volumes:
+      - ./server:/server
+      - /server/node_modules
 volumes:
   timescaledb_data:
