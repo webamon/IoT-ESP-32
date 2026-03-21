@@ -12,8 +12,8 @@ Mosquitto (broker MQTT — port 1883)
         │  subscribe
         ▼
 Fastify (backend Node.js — port 3000)
-        ├── sauvegarde → TimescaleDB         [à venir]
-        └── push      → WebSocket            [à venir]
+        ├── sauvegarde → TimescaleDB
+        └── push      → WebSocket
                               │
                               ▼
                     Dashboard React           [à venir]
@@ -21,14 +21,14 @@ Fastify (backend Node.js — port 3000)
 
 ## Stack technique
 
-| Couche          | Techno                      | Pourquoi                                            |
-|-----------------|-----------------------------|-----------------------------------------------------|
-| Protocole IoT   | MQTT (Mosquitto)            | Standard IoT, léger, conçu pour les capteurs        |
-| Backend         | Node.js + Fastify + TypeScript | Rapide, validation JSON native, adapté au streaming |
-| Temps réel      | WebSocket                   | Relay MQTT → frontend avec contrôle côté serveur    |
-| Base de données | TimescaleDB (PostgreSQL)    | Optimisée pour les time-series, SQL compatible      |
-| Frontend        | React + Recharts            | Graphiques interactifs, API React simple            |
-| DevOps          | Docker Compose              | Orchestration locale de tous les services           |
+| Couche          | Techno                            | Pourquoi                                            |
+| --------------- | --------------------------------- | --------------------------------------------------- |
+| Protocole IoT   | MQTT (Mosquitto)                  | Standard IoT, léger, conçu pour les capteurs        |
+| Backend         | Node.js + Fastify v5 + TypeScript | Rapide, validation JSON native, adapté au streaming |
+| Temps réel      | WebSocket                         | Relay MQTT → frontend avec contrôle côté serveur    |
+| Base de données | TimescaleDB (PostgreSQL)          | Optimisée pour les time-series, SQL compatible      |
+| Frontend        | React + Recharts                  | Graphiques interactifs, API React simple            |
+| DevOps          | Docker Compose                    | Orchestration locale de tous les services           |
 
 ## Structure du projet
 
@@ -39,7 +39,14 @@ IoT/
 │   └── mosquitto.conf        # Config du broker MQTT
 ├── server/                   # Backend Fastify (TypeScript)
 │   └── src/
-│       └── index.ts          # Subscribe MQTT, log les messages
+│       ├── index.ts          # Point d'entrée, route WebSocket
+│       ├── transport/
+│       │   └── mqtt.ts       # Abonnement MQTT, parsing des messages
+│       ├── services/
+│       │   └── sensor-service.ts  # Logique métier
+│       └── persistence/
+│           └── db.ts         # Pool PostgreSQL, saveMeasure()
+├── client/                   # Frontend React
 └── simulator/                # Simulateur ESP32
     └── simulator.js          # Publie des données de capteur factices
 ```
@@ -51,21 +58,13 @@ IoT/
 
 ## Démarrage rapide
 
-### 1. Lancer le broker MQTT
-
 ```bash
 docker compose up -d
 ```
 
-### 2. Démarrer le serveur
+Tous les services (Mosquitto, Fastify, TimescaleDB) démarrent automatiquement.
 
-```bash
-cd server
-npm install
-npm run dev
-```
-
-### 3. Lancer le simulateur (dans un autre terminal)
+Pour lancer le simulateur (hors Docker) :
 
 ```bash
 cd simulator
@@ -73,28 +72,29 @@ npm install
 node simulator.js
 ```
 
-Le simulateur publie un message MQTT sur le topic `maison/salon/temperature`.
-Le serveur le reçoit et l'affiche dans sa console.
-
 ## Format des messages MQTT
 
-**Topic :** `maison/salon/<type_capteur>`
+**Topic :** `maison/salon/<deviceId>`
 
 **Payload JSON :**
+
 ```json
 {
-  "value": 23.4,
-  "unit": "°C",
-  "timestamp": "2026-03-06T10:00:00.000Z"
+  "measures": {
+    "temperature": 23.4,
+    "humidity": 60
+  }
 }
 ```
+
+**WebSocket :** `ws://localhost:3000/sensor-measures`
 
 ## Roadmap
 
 - [x] Broker MQTT (Mosquitto) via Docker
 - [x] Serveur Fastify abonné aux topics MQTT
 - [x] Simulateur ESP32
-- [ ] Persistance des données (TimescaleDB)
-- [ ] WebSocket vers le frontend
+- [x] Persistance des données (TimescaleDB)
+- [x] WebSocket vers le frontend
 - [ ] Dashboard React + Recharts
 - [ ] Déploiement (Railway / Render / VPS)
