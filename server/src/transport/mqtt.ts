@@ -3,7 +3,7 @@ import { handleSensorData } from '../services/sensor-service.js'
 import { broadcastWS } from './ws.js'
 
 export function startMqttListener(): void {
-  const client = mqtt.connect('mqtt://localhost:1883')
+  const client = mqtt.connect('mqtt://mosquitto:1883')
 
   client.on('connect', () => {
     console.log('✅ Connecté au broker MQTT')
