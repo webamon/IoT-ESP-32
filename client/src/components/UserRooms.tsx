@@ -1,4 +1,7 @@
 import { useEffect, useState } from 'react'
+import { Box, Card, CardContent, Typography } from '@mui/material'
+import MeetingRoomIcon from '@mui/icons-material/MeetingRoom'
+import { useNavigate } from 'react-router-dom'
 
 interface Props {
   userId: string
@@ -11,6 +14,7 @@ async function fetchRooms(userId: string) {
 
 export function UserRooms({ userId }: Props) {
   const [rooms, setRooms] = useState<{ id: string; label: string }[]>([])
+  const navigate = useNavigate()
 
   useEffect(() => {
     const fetchData = async () => {
@@ -22,10 +26,19 @@ export function UserRooms({ userId }: Props) {
   }, [userId])
 
   return (
-    <div>
+    <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 2 }}>
       {rooms.map((room) => (
-        <div key={room.id}>{room.label}</div>
+        <Card
+          key={room.id}
+          sx={{ minWidth: 140, cursor: 'pointer' }}
+          onClick={() => navigate(`/rooms/${encodeURIComponent(room.label)}`)}
+        >
+          <CardContent sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 1 }}>
+            <MeetingRoomIcon color="primary" />
+            <Typography variant="subtitle1">{room.label}</Typography>
+          </CardContent>
+        </Card>
       ))}
-    </div>
+    </Box>
   )
 }
