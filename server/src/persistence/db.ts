@@ -1,4 +1,4 @@
-import pg from 'pg'
+import pg, { QueryResult } from 'pg'
 
 const pool = new pg.Pool({
   host: 'timescaledb',
@@ -20,4 +20,31 @@ export async function saveMeasure(
   )
 
   return result.rows[0].time
+}
+
+export async function getMeasures(
+  deviceId: string,
+  metric: string,
+  from: Date,
+  to: Date
+): Promise<any[]> {
+  const result = await pool.query(
+    `SELECT sensor_id, metric, value, time 
+   FROM sensor_readings
+   WHERE sensor_id = $1 AND metric = $2 AND time >= $3 AND time <= $4`,
+    [deviceId, metric, from, to]
+  )
+
+  return result.rows
+}
+
+export async function getUserRooms(userId: string): Promise<any[]> {
+  const result = await pool.query(
+    `SELECT id, label 
+   FROM rooms
+   WHERE user_id = $1`,
+    [userId]
+  )
+
+  return result.rows
 }

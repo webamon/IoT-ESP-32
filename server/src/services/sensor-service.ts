@@ -18,3 +18,12 @@ export async function handleSensorData(
     })
   )
 }
+
+export function convertDbEntryInSensorData(
+  sensor_id: string,
+  metric: string,
+  value: number,
+  time: Date
+): SensorData {
+  return { deviceId: sensor_id, metric, value, time }
+}
