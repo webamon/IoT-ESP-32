@@ -3,7 +3,7 @@ services:
   mosquitto:
     image: eclipse-mosquitto:2
     ports:
-      - "1883:1883"
+      - '1883:1883'
     volumes:
       - ./mosquitto/mosquitto.conf:/mosquitto/config/mosquitto.conf
 
@@ -15,19 +15,19 @@ services:
       POSTGRES_PASSWORD: iot
       POSTGRES_DB: iot_db
     ports:
-      - "5432:5432"
+      - '5432:5432'
     volumes:
       - timescaledb_data:/var/lib/postgresql/data
+      - ./db/init.sql:/docker-entrypoint-initdb.d/init.sql:ro
 
   server:
     build: ./server
     ports:
-      - "3000:3000"
+      - '3000:3000'
     depends_on:
       - mosquitto
       - timescaledb
     volumes:
-      - ./server:/server
-      - /server/node_modules
+      - ./server/src:/server/src # ✅ monte uniquement le source, pas node_modules
 volumes:
   timescaledb_data:
