@@ -6,17 +6,17 @@ Plateforme IoT pour collecter, stocker et visualiser des données de capteurs (E
 
 ```
 ESP32 / Simulateur (capteurs)
-        │  MQTT publish
+        │  MQTT publish  (topic: maison/salon/<deviceId>)
         ▼
-Mosquitto (broker MQTT — port 1883)
+Mosquitto (broker MQTT — port 1883)     ← Docker
         │  subscribe
         ▼
-Fastify (backend Node.js — port 3000)
-        ├── sauvegarde → TimescaleDB
+Fastify (backend Node.js — port 3000)   ← Docker
+        ├── sauvegarde → TimescaleDB    ← Docker
         └── push      → WebSocket
                               │
                               ▼
-                    Dashboard React           [à venir]
+                    Dashboard React (MUI + MUI X Charts)
 ```
 
 ## Stack technique
@@ -27,7 +27,7 @@ Fastify (backend Node.js — port 3000)
 | Backend         | Node.js + Fastify v5 + TypeScript | Rapide, validation JSON native, adapté au streaming |
 | Temps réel      | WebSocket                         | Relay MQTT → frontend avec contrôle côté serveur    |
 | Base de données | TimescaleDB (PostgreSQL)          | Optimisée pour les time-series, SQL compatible      |
-| Frontend        | React + Recharts                  | Graphiques interactifs, API React simple            |
+| Frontend        | React + MUI + MUI X Charts        | Composants Material Design, graphiques time-series  |
 | DevOps          | Docker Compose                    | Orchestration locale de tous les services           |
 
 ## Structure du projet
@@ -38,17 +38,18 @@ IoT/
 ├── mosquitto/
 │   └── mosquitto.conf        # Config du broker MQTT
 ├── server/                   # Backend Fastify (TypeScript)
+│   ├── Dockerfile
 │   └── src/
-│       ├── index.ts          # Point d'entrée, route WebSocket
+│       ├── index.ts          # Point d'entrée, WebSocket
 │       ├── transport/
 │       │   └── mqtt.ts       # Abonnement MQTT, parsing des messages
 │       ├── services/
-│       │   └── sensor-service.ts  # Logique métier
+│       │   └── sensor-service.ts  # Logique métier (handleSensorData)
 │       └── persistence/
 │           └── db.ts         # Pool PostgreSQL, saveMeasure()
 ├── client/                   # Frontend React
-└── simulator/                # Simulateur ESP32
-    └── simulator.js          # Publie des données de capteur factices
+└── simulator/
+    └── simulator.js          # Simulateur ESP32 (publie des données factices)
 ```
 
 ## Prérequis
@@ -67,14 +68,12 @@ Tous les services (Mosquitto, Fastify, TimescaleDB) démarrent automatiquement.
 Pour lancer le simulateur (hors Docker) :
 
 ```bash
-cd simulator
-npm install
-node simulator.js
+node simulator/simulator.js
 ```
 
 ## Format des messages MQTT
 
-**Topic :** `maison/salon/<deviceId>`
+**Topic :** `maison/<room>/<deviceId>`
 
 **Payload JSON :**
 
@@ -87,6 +86,8 @@ node simulator.js
 }
 ```
 
+Le backend est metric-agnostic : ajouter une nouvelle métrique dans le payload ne nécessite aucun changement côté serveur.
+
 **WebSocket :** `ws://localhost:3000/sensor-measures`
 
 ## Roadmap
@@ -96,5 +97,33 @@ node simulator.js
 - [x] Simulateur ESP32
 - [x] Persistance des données (TimescaleDB)
 - [x] WebSocket vers le frontend
-- [ ] Dashboard React + Recharts
-- [ ] Déploiement (Railway / Render / VPS)
+- [x] Dashboard React (MUI + MUI X Charts)
+- [x] Dockerisation complète du stack
+- [ ] Déploiement cloud (Railway / Render / VPS)
+
+## Backlog features
+
+### 🏠 Rooms & Devices
+- Créer / renommer / supprimer des rooms via une interface d'administration
+- Assigner un device à une room, renommer un device
+- Vue par room dans le dashboard (filtrage par pièce)
+- Affichage multi-devices comparatif dans une même room
+
+### 📊 Dashboard & historique
+- Historique avec filtres par date (MUI X Date Pickers)
+- Multi-métriques sur un même graphique (température + humidité)
+- Indicateurs temps réel : valeur courante, min / max / moyenne
+
+### 🔐 Authentification
+- Login / logout avec JWT (`@fastify/jwt`)
+- Routes API et WebSocket protégées
+- Gestion des rôles : admin vs viewer
+
+### 🔔 Alertes
+- Seuils configurables par métrique
+- Notifications in-app (toast MUI) via WebSocket
+- Historique des alertes
+
+### 🏗️ Architecture
+- Adapter pattern : interface `SensorAdapter` → implémentations simulateur et ESP32
+- REST API CRUD pour rooms et devices
