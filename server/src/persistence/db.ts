@@ -48,3 +48,15 @@ export async function getUserRooms(userId: string): Promise<any[]> {
 
   return result.rows
 }
+
+export async function addUserRoom(
+  userId: string,
+  label: string
+): Promise<any[]> {
+  const result = await pool.query(
+    `INSERT INTO rooms (user_id, label) VALUES ($1, $2) RETURNING id, label`,
+    [userId, label]
+  )
+
+  return result.rows
+}

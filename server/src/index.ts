@@ -5,6 +5,7 @@ import { addWSClient } from './transport/ws.js'
 import { startMqttListener } from './transport/mqtt.js'
 import { getMeasures, getUserRooms } from './persistence/db.js'
 import { convertDbEntryInSensorData } from './services/sensor-service.js'
+import { createRoom, RoomLabelConflictError } from './services/room-service.js'
 
 const fastify = Fastify({ logger: true })
 await fastify.register(cors)
@@ -29,6 +30,17 @@ fastify.register(async (fastify) => {
     const results = await getUserRooms(userId)
 
     return results
+  })
+  fastify.post('/rooms', async (request, reply) => {
+    const { userId, label } = request.body
+    try {
+      return await createRoom(userId, label)
+    } catch (err) {
+      if (err instanceof RoomLabelConflictError) {
+        return reply.status(409).send({ error: err.message })
+      }
+      throw err
+    }
   })
 
   fastify.get('/sensor-measures', { websocket: true }, (socket) => {
