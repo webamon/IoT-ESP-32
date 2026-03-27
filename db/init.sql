@@ -15,6 +15,7 @@ CREATE TABLE "public"."rooms" (
     "user_id" uuid NOT NULL,
     "label" text NOT NULL,
     CONSTRAINT "rooms_user_id_fkey" FOREIGN KEY ("user_id") REFERENCES "public"."users"("id") ON DELETE CASCADE,
+    CONSTRAINT "rooms_user_label_unique" UNIQUE ("user_id", "label"),
     PRIMARY KEY ("id")
 );
 
