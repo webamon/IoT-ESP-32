@@ -37,7 +37,7 @@ function Layout() {
           <Route path="/" element={<DashboardPage />} />
           <Route path="/rooms" element={<RoomsPage userId={USER_ID} />}>
             <Route
-              path=":roomName"
+              path=":roomId"
               element={<RoomDetailPage userId={USER_ID} />}
             />
           </Route>
