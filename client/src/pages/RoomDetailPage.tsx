@@ -1,4 +1,4 @@
-import { Box, Typography } from '@mui/material'
+import { Typography } from '@mui/material'
 import { useParams } from 'react-router-dom'
 
 interface Props {
@@ -8,9 +8,5 @@ interface Props {
 export function RoomDetailPage({ userId }: Props) {
   const { roomName } = useParams<{ roomName: string }>()
 
-  return (
-    <Box sx={{ mt: 4 }}>
-      <Typography variant="h6">{roomName}</Typography>
-    </Box>
-  )
+  return <Typography variant="h1">{roomName}</Typography>
 }
