@@ -1,4 +1,4 @@
-import { addUserRoom } from '../persistence/db.js'
+import { addUserRoom, getDevicesByRoom } from '../persistence/db.js'
 
 export class RoomLabelConflictError extends Error {}
 
@@ -12,4 +12,10 @@ export async function createRoom(userId: string, label: string) {
     }
     throw err
   }
+}
+
+export async function getDevicesByRoomId(room_id: string) {
+  try {
+    return await getDevicesByRoom(room_id)
+  } catch (err: any) {}
 }

@@ -60,3 +60,13 @@ export async function addUserRoom(
 
   return result.rows
 }
+
+export async function getDevicesByRoom(roomId: string): Promise<any[]> {
+  const result = await pool.query(
+    `SELECT mac_address 
+   FROM devices
+   WHERE room_id = $1`,
+    [roomId]
+  )
+  return result.rows
+}
