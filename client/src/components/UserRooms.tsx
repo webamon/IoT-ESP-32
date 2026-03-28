@@ -1,31 +1,20 @@
-import { useEffect, useState } from 'react'
+import { useQuery } from '@tanstack/react-query'
 import { Card, CardContent, Grid, Typography } from '@mui/material'
 import MeetingRoomIcon from '@mui/icons-material/MeetingRoom'
 import { useNavigate, useLocation } from 'react-router-dom'
+import { getRooms } from '../api/rooms'
 
 interface Props {
   userId: string
-  refreshKey: number
 }
 
-async function fetchRooms(userId: string) {
-  const response = await fetch(`http://localhost:3000/rooms?userId=${userId}`)
-  return response.json()
-}
-
-export function UserRooms({ userId, refreshKey }: Props) {
-  const [rooms, setRooms] = useState<{ id: string; label: string }[]>([])
+export function UserRooms({ userId }: Props) {
+  const { data: rooms = [] } = useQuery<{ id: string; label: string }[]>({
+    queryKey: ['rooms', userId],
+    queryFn: () => getRooms(userId),
+  })
   const navigate = useNavigate()
   const location = useLocation()
-
-  useEffect(() => {
-    const fetchData = async () => {
-      const rooms = await fetchRooms(userId)
-      setRooms(rooms)
-    }
-
-    fetchData()
-  }, [userId, refreshKey])
 
   return (
     <Grid container spacing={2}>

@@ -7,15 +7,10 @@ import dayjs, { type Dayjs } from 'dayjs'
 import type { SensorData } from '../../../server/src/services/sensor-service'
 import { SensorTemperature } from '../components/SensorTemperature'
 import { SensorHumidity } from '../components/SensorHumidity'
+import { getMeasurements } from '../api/measurements'
+import { BASE_URL } from '../api/config'
 
-const WS_URI = 'ws://localhost:3000/sensor-measures'
-
-async function fetchMetric(metric: string, from: string, to: string) {
-  const response = await fetch(
-    `http://localhost:3000/measurements?deviceId=A1B2C3D4E5F6&metric=${metric}&from=${from}&to=${to}`
-  )
-  return response.json()
-}
+const WS_URI = `${BASE_URL.replace('http', 'ws')}/sensor-measures`
 
 export function DashboardPage() {
   const [temperatures, setTemperatures] = useState<SensorData[]>([])
@@ -29,8 +24,8 @@ export function DashboardPage() {
       const toStr = to.format('YYYY-MM-DD')
 
       const [temps, humid] = await Promise.all([
-        fetchMetric('temperature', fromStr, toStr),
-        fetchMetric('humidity', fromStr, toStr),
+        getMeasurements('temperature', fromStr, toStr),
+        getMeasurements('humidity', fromStr, toStr),
       ])
 
       setTemperatures(temps)

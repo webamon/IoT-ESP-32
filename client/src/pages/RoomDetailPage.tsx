@@ -1,31 +1,21 @@
 import { Box, Chip, Typography } from '@mui/material'
-import { useEffect, useState } from 'react'
+import { useQuery } from '@tanstack/react-query'
 import { useParams } from 'react-router-dom'
 import RouterIcon from '@mui/icons-material/Router'
+import { getRoomDevices } from '../api/rooms'
 
 interface Props {
   userId: string
 }
 
-async function fetchRoomDevices(roomId: string) {
-  const response = await fetch(`http://localhost:3000/rooms/${roomId}/devices`)
-  return response.json()
-}
-
-export function RoomDetailPage({ userId }: Props) {
+export function RoomDetailPage({ userId: _userId }: Props) {
   const { roomId } = useParams<{ roomId: string }>()
-  const [devices, setDevices] = useState<{ mac_address: string }[]>([])
 
-  useEffect(() => {
-    const fetchData = async () => {
-      if (roomId) {
-        const data = await fetchRoomDevices(roomId)
-        setDevices(data)
-      }
-    }
-
-    fetchData()
-  }, [roomId])
+  const { data: devices = [] } = useQuery<{ mac_address: string }[]>({
+    queryKey: ['rooms', roomId, 'devices'],
+    queryFn: () => getRoomDevices(roomId!),
+    enabled: !!roomId,
+  })
 
   return (
     <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>

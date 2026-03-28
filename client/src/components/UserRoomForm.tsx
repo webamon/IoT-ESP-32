@@ -8,29 +8,29 @@ import {
   TextField,
 } from '@mui/material'
 import AddIcon from '@mui/icons-material/Add'
+import { useMutation, useQueryClient } from '@tanstack/react-query'
+import { createRoom } from '../api/rooms'
 
 interface Props {
   userId: string
-  onRoomAdded?: () => void
 }
 
-async function createRoom(userId: string, label: string) {
-  const response = await fetch('http://localhost:3000/rooms', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ userId, label }),
-  })
-  if (response.status === 409) {
-    const { error } = await response.json()
-    throw new Error(error)
-  }
-  return response.json()
-}
-
-export function UserRoomForm({ userId, onRoomAdded }: Props) {
+export function UserRoomForm({ userId }: Props) {
   const [open, setOpen] = useState(false)
   const [label, setLabel] = useState('')
   const [error, setError] = useState<string | null>(null)
+  const queryClient = useQueryClient()
+
+  const mutation = useMutation({
+    mutationFn: (label: string) => createRoom(userId, label),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['rooms', userId] })
+      handleClose()
+    },
+    onError: (err) => {
+      setError(err instanceof Error ? err.message : 'Erreur inconnue')
+    },
+  })
 
   const handleOpen = () => setOpen(true)
 
@@ -40,15 +40,9 @@ export function UserRoomForm({ userId, onRoomAdded }: Props) {
     setError(null)
   }
 
-  const handleSubmit = async () => {
+  const handleSubmit = () => {
     if (!label.trim()) return
-    try {
-      await createRoom(userId, label.trim())
-      handleClose()
-      onRoomAdded?.()
-    } catch (err) {
-      setError(err instanceof Error ? err.message : 'Erreur inconnue')
-    }
+    mutation.mutate(label.trim())
   }
 
   return (
