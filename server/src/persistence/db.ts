@@ -70,3 +70,15 @@ export async function getDevicesByRoom(roomId: string): Promise<any[]> {
   )
   return result.rows
 }
+
+export async function updateDeviceRoom(
+  macAddress: string,
+  roomId: string
+): Promise<any[]> {
+  const result = await pool.query(
+    `UPDATE devices SET room_id = $1 WHERE mac_address = $2 RETURNING mac_address, room_id`,
+    [roomId, macAddress]
+  )
+
+  return result.rows
+}
