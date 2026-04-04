@@ -8,9 +8,7 @@ import type { SensorData } from '../../../server/src/services/sensor-service'
 import { SensorTemperature } from '../components/SensorTemperature'
 import { SensorHumidity } from '../components/SensorHumidity'
 import { getMeasurements } from '../api/measurements'
-import { BASE_URL } from '../api/config'
-
-const WS_URI = `${BASE_URL.replace('http', 'ws')}/sensor-measures`
+import { useWS } from '../contexts/WSProvider'
 
 export function DashboardPage() {
   const [temperatures, setTemperatures] = useState<SensorData[]>([])
@@ -52,21 +50,14 @@ export function DashboardPage() {
     [from, to]
   )
 
+  const { subscribe } = useWS()
+
   useEffect(() => {
-    const ws = new WebSocket(WS_URI)
-
-    const onMessage = (e: MessageEvent) => {
-      const sensorDatas: SensorData[] = JSON.parse(e.data)
-      handleMessage(sensorDatas)
-    }
-
-    ws.addEventListener('message', onMessage)
-
-    return () => {
-      ws.removeEventListener('message', onMessage)
-      ws.close()
-    }
-  }, [handleMessage])
+    return subscribe((e: MessageEvent) => {
+      const { type, payload } = JSON.parse(e.data)
+      if (type === 'sensor:data') handleMessage(payload as SensorData[])
+    })
+  }, [handleMessage, subscribe])
 
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>

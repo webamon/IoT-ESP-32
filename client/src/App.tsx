@@ -5,13 +5,13 @@ import {
   Box,
   AppBar,
   Toolbar,
-  Typography,
 } from '@mui/material'
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
 import { Sidebar } from './components/Sidebar'
 import { DashboardPage } from './pages/DashboardPage'
 import { RoomsPage } from './pages/RoomsPage'
 import { RoomDetailPage } from './pages/RoomDetailPage'
+import { useWsEvents } from './hooks/useWsEvents'
 
 const USER_ID = 'bdc9760f-0964-43c0-b0b8-7efe97210aae'
 
@@ -22,6 +22,8 @@ const theme = createTheme({
 })
 
 function Layout() {
+  useWsEvents()
+
   return (
     <Box sx={{ display: 'flex' }}>
       <Sidebar />

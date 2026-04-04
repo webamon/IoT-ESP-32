@@ -7,7 +7,9 @@ export function addWSClient(socket: WebSocket): void {
   socket.on('close', () => clients.delete(socket))
 }
 
-export function broadcastWS(data: object): void {
+type WSMessage = { type: string; payload: unknown }
+
+export function broadcastWS(data: WSMessage): void {
   const message = JSON.stringify(data)
   clients.forEach(client => client.send(message))
 }

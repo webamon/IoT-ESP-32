@@ -5,6 +5,7 @@ import {
   getDevicesByRoomId,
   RoomLabelConflictError,
 } from '../services/room-service.js'
+import { broadcastWS } from '../transport/ws.js'
 
 export async function roomsRoutes(fastify: FastifyInstance) {
   fastify.get<{
@@ -17,7 +18,10 @@ export async function roomsRoutes(fastify: FastifyInstance) {
   fastify.post('/rooms', async (request, reply) => {
     const { userId, label } = request.body
     try {
-      return await createRoom(userId, label)
+      const room = await createRoom(userId, label)
+      broadcastWS({ type: 'room:created', payload: true })
+      console.log('aaaaaa', 'cool')
+      return room
     } catch (err) {
       if (err instanceof RoomLabelConflictError) {
         return reply.status(409).send({ error: err.message })

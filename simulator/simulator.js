@@ -11,7 +11,7 @@ client.on('connect', () => {
       },
     })
 
-    client.publish('maison/salon/device1', payload)
+    client.publish('maison/salon/A1B2C3D4E5F6', payload)
     console.log('📤 Message publié :', payload)
   }, 1000)
 })
