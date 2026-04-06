@@ -1,12 +1,7 @@
 import pg from 'pg'
+import { config } from '../src/config.js'
 
-const pool = new pg.Pool({
-  host: 'localhost',
-  port: 5432,
-  database: 'iot_db',
-  user: 'root',
-  password: 'iot',
-})
+const pool = new pg.Pool(config.db)
 
 const DEVICES_ID = [
   'A1B2C3D4E5F6',

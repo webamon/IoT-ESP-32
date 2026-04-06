@@ -1,12 +1,7 @@
 import pg, { QueryResult } from 'pg'
+import { config } from '../config.js'
 
-const pool = new pg.Pool({
-  host: 'timescaledb',
-  port: 5432,
-  database: 'iot_db',
-  user: 'root',
-  password: 'iot',
-})
+const pool = new pg.Pool(config.db)
 
 export async function saveMeasure(
   sensorId: string,

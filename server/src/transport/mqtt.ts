@@ -1,10 +1,12 @@
 import mqtt from 'mqtt'
 import { handleSensorData } from '../services/sensor-service.js'
 import { broadcastWS } from './ws.js'
+import { config } from '../config.js'
 
 export function startMqttListener(deviceId?: string): void {
-  const client = mqtt.connect('mqtt://mosquitto:1883')
-  const topic = deviceId ? `maison/+/${deviceId}` : 'maison/+/+'
+  const client = mqtt.connect(config.mqtt.url)
+  const prefix = config.mqtt.topicPrefix
+  const topic = deviceId ? `${prefix}/+/${deviceId}` : `${prefix}/+/+`
 
   client.on('connect', () => {
     console.log('✅ Connecté au broker MQTT')

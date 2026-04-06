@@ -12,8 +12,7 @@ import { DashboardPage } from './pages/DashboardPage'
 import { RoomsPage } from './pages/RoomsPage'
 import { RoomDetailPage } from './pages/RoomDetailPage'
 import { useWsEvents } from './hooks/useWsEvents'
-
-const USER_ID = 'bdc9760f-0964-43c0-b0b8-7efe97210aae'
+import { USER_ID } from './api/config'
 
 const theme = createTheme({
   palette: {

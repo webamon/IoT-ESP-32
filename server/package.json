@@ -2,8 +2,9 @@
   "name": "server",
   "type": "module",
   "scripts": {
-    "dev": "npx tsx src/index.ts",
-    "start": "npx tsx src/index.ts"
+    "dev": "npx tsx --env-file=.env src/index.ts",
+    "start": "npx tsx --env-file=.env src/index.ts",
+    "seed": "npx tsx --env-file=.env.seed scripts/seed.ts"
   },
   "dependencies": {
     "@fastify/cors": "^11.2.0",

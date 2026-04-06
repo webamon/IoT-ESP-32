@@ -20,7 +20,6 @@ export async function roomsRoutes(fastify: FastifyInstance) {
     try {
       const room = await createRoom(userId, label)
       broadcastWS({ type: 'room:created', payload: true })
-      console.log('aaaaaa', 'cool')
       return room
     } catch (err) {
       if (err instanceof RoomLabelConflictError) {
