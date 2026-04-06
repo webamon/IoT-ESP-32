@@ -1,5 +1,7 @@
 import pg from 'pg'
 import { config } from '../config.js'
+import type { Room } from '../domain/room.js'
+import type { Device, DeviceRoom } from '../domain/device.js'
 
 const pool = new pg.Pool(config.db)
 
@@ -8,20 +10,6 @@ interface MeasureRow {
   metric: string
   value: number
   time: Date
-}
-
-export interface Room {
-  id: string
-  label: string
-}
-
-export interface Device {
-  mac_address: string
-}
-
-export interface DeviceRoom {
-  mac_address: string
-  room_id: string
 }
 
 export async function saveMeasure(

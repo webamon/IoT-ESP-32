@@ -1,11 +1,7 @@
 import { saveMeasure } from '../persistence/db.js'
+import type { SensorData } from '../domain/sensor.js'
 
-export interface SensorData {
-  deviceId: string
-  metric: string
-  value: number
-  time: Date
-}
+export type { SensorData }
 
 export async function handleSensorData(
   deviceId: string,

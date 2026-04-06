@@ -1,4 +1,6 @@
-import { addUserRoom, getDevicesByRoom, type Room, type Device } from '../persistence/db.js'
+import { addUserRoom, getDevicesByRoom } from '../persistence/db.js'
+import type { Room } from '../domain/room.js'
+import type { Device } from '../domain/device.js'
 
 export class RoomLabelConflictError extends Error {}
 
