@@ -4,3 +4,8 @@ export interface SensorData {
   value: number
   time: Date
 }
+
+export interface SensorPayload {
+  deviceId: string
+  measures: Record<string, number>
+}

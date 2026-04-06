@@ -1,6 +1,7 @@
 import mqtt from 'mqtt'
 import { handleSensorData } from '../services/sensor-service.js'
 import { broadcastWS } from './ws.js'
+import { parseMqttMessage } from './mqtt-adapter.js'
 import { config } from '../config.js'
 
 export function startMqttListener(deviceId?: string): void {
@@ -14,9 +15,7 @@ export function startMqttListener(deviceId?: string): void {
   })
 
   client.on('message', async (topic, message) => {
-    const [, , deviceId] = topic.split('/')
-
-    const { measures } = JSON.parse(message.toString())
+    const { deviceId, measures } = parseMqttMessage(topic, message)
     const sensorData = await handleSensorData(deviceId, measures)
     broadcastWS({ type: 'sensor:data', payload: sensorData })
   })
