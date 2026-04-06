@@ -14,7 +14,7 @@ export function startMqttListener(deviceId?: string): void {
   })
 
   client.on('message', async (topic, message) => {
-    const [home, room, deviceId] = topic.split('/')
+    const [, , deviceId] = topic.split('/')
 
     const { measures } = JSON.parse(message.toString())
     const sensorData = await handleSensorData(deviceId, measures)

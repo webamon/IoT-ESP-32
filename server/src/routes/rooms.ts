@@ -15,7 +15,7 @@ export async function roomsRoutes(fastify: FastifyInstance) {
     return getUserRooms(userId)
   })
 
-  fastify.post('/rooms', async (request, reply) => {
+  fastify.post<{ Body: { userId: string; label: string } }>('/rooms', async (request, reply) => {
     const { userId, label } = request.body
     try {
       const room = await createRoom(userId, label)
