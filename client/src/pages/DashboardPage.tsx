@@ -5,8 +5,7 @@ import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider'
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs'
 import dayjs, { type Dayjs } from 'dayjs'
 import type { SensorData } from '../../../server/src/services/sensor-service'
-import { SensorTemperature } from '../components/SensorTemperature'
-import { SensorHumidity } from '../components/SensorHumidity'
+import { SensorGraphic } from '../components/SensorGraphic'
 import { getMeasurements } from '../api/measurements'
 import { useWS } from '../contexts/WSProvider'
 
@@ -76,8 +75,8 @@ export function DashboardPage() {
             minDate={from}
           />
         </Stack>
-        <SensorTemperature data={temperatures} />
-        <SensorHumidity data={humidity} />
+        <SensorGraphic data={temperatures} metric="temperature" />
+        <SensorGraphic data={humidity} metric="humidity" />
       </Box>
     </LocalizationProvider>
   )
