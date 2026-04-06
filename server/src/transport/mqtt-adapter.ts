@@ -1,3 +1,4 @@
+/* Domain */
 import type { SensorPayload } from '../domain/sensor.js'
 
 export function parseMqttMessage(topic: string, message: Buffer): SensorPayload {

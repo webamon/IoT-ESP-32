@@ -1,4 +1,7 @@
+/* Internal */
 import { addUserRoom, getDevicesByRoom } from '../persistence/db.js'
+
+/* Domain */
 import type { Room } from '../domain/room.js'
 import type { Device } from '../domain/device.js'
 

@@ -1,5 +1,10 @@
+/* External */
 import pg from 'pg'
+
+/* Internal */
 import { config } from '../config.js'
+
+/* Domain */
 import type { Room } from '../domain/room.js'
 import type { Device, DeviceRoom } from '../domain/device.js'
 

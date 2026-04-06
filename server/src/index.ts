@@ -1,6 +1,9 @@
+/* External */
 import Fastify from 'fastify'
 import cors from '@fastify/cors'
 import websocket from '@fastify/websocket'
+
+/* Internal */
 import { startMqttListener } from './transport/mqtt.js'
 import { measurementsRoutes } from './routes/measurements.js'
 import { roomsRoutes } from './routes/rooms.js'

@@ -1,4 +1,7 @@
+/* External */
 import type { FastifyInstance } from 'fastify'
+
+/* Internal */
 import { updateDeviceRoom } from '../services/device-service.js'
 
 export async function devicesRoutes(fastify: FastifyInstance) {

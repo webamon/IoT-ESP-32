@@ -1,4 +1,7 @@
+/* Internal */
 import { saveMeasure } from '../persistence/db.js'
+
+/* Domain */
 import type { SensorData } from '../domain/sensor.js'
 
 export type { SensorData }

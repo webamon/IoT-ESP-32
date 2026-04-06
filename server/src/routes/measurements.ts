@@ -1,4 +1,7 @@
+/* External */
 import type { FastifyInstance } from 'fastify'
+
+/* Internal */
 import { getMeasures } from '../persistence/db.js'
 import { convertDbEntryInSensorData } from '../services/sensor-service.js'
 

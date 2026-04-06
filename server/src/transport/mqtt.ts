@@ -1,4 +1,7 @@
+/* External */
 import mqtt from 'mqtt'
+
+/* Internal */
 import { handleSensorData } from '../services/sensor-service.js'
 import { broadcastWS } from './ws.js'
 import { parseMqttMessage } from './mqtt-adapter.js'

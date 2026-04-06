@@ -1,3 +1,4 @@
+/* External */
 import { WebSocket } from 'ws'
 
 const clients = new Set<WebSocket>()

@@ -1,10 +1,9 @@
+/* External */
 import type { FastifyInstance } from 'fastify'
+
+/* Internal */
 import { getUserRooms } from '../persistence/db.js'
-import {
-  createRoom,
-  getDevicesByRoomId,
-  RoomLabelConflictError,
-} from '../services/room-service.js'
+import { createRoom, getDevicesByRoomId, RoomLabelConflictError } from '../services/room-service.js'
 import { broadcastWS } from '../transport/ws.js'
 
 export async function roomsRoutes(fastify: FastifyInstance) {
