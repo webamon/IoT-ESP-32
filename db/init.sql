@@ -5,6 +5,8 @@ DROP TABLE IF EXISTS "public"."users";
 -- Table Definition
 CREATE TABLE "public"."users" (
     "id" uuid NOT NULL DEFAULT gen_random_uuid(),
+    "email" text NOT NULL UNIQUE,
+    "password_hash" text NOT NULL,
     PRIMARY KEY ("id")
 );
 
@@ -45,8 +47,8 @@ SELECT create_hypertable('sensor_readings', 'time', if_not_exists => TRUE);
 -- Indices
 CREATE INDEX IF NOT EXISTS sensor_readings_time_idx ON public.sensor_readings USING btree ("time" DESC);
 
-INSERT INTO "public"."users" ("id") VALUES
-('bdc9760f-0964-43c0-b0b8-7efe97210aae');
+INSERT INTO "public"."users" ("id", "email", "password_hash") VALUES
+('bdc9760f-0964-43c0-b0b8-7efe97210aae', 'admin@iot.dev', '$2b$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi');
 INSERT INTO "public"."rooms" ("id", "user_id", "label") VALUES
 ('28eca792-92ef-475a-8a01-1b55212ffa08', 'bdc9760f-0964-43c0-b0b8-7efe97210aae', 'chambre'),
 ('386631b7-cd28-4649-92c3-5baee9c82660', 'bdc9760f-0964-43c0-b0b8-7efe97210aae', 'bureau'),
