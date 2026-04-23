@@ -13,6 +13,7 @@ import { RoomsPage } from './pages/RoomsPage'
 import { RoomDetailPage } from './pages/RoomDetailPage'
 import { useWsEvents } from './hooks/useWsEvents'
 import { USER_ID } from './api/config'
+import { LoginPage } from './pages/LoginPage'
 
 const theme = createTheme({
   palette: {
@@ -33,7 +34,6 @@ function Layout() {
         <AppBar position="static" color="default" elevation={1}>
           <Toolbar />
         </AppBar>
-
         <Routes>
           <Route path="/" element={<DashboardPage />} />
           <Route path="/rooms" element={<RoomsPage userId={USER_ID} />}>
@@ -53,7 +53,10 @@ function App() {
     <ThemeProvider theme={theme}>
       <CssBaseline />
       <BrowserRouter>
-        <Layout />
+        <Routes>
+          <Route path="/login" element={<LoginPage />} />
+          <Route path="/*" element={<Layout />} />
+        </Routes>
       </BrowserRouter>
     </ThemeProvider>
   )
