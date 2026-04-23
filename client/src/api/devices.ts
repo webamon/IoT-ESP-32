@@ -1,7 +1,8 @@
 import { BASE_URL } from './config'
+import { apiFetch } from './fetch'
 
 export async function updateDeviceRoom(macAddress: string, roomId: string) {
-  const res = await fetch(`${BASE_URL}/devices/${macAddress}`, {
+  const res = await apiFetch(`${BASE_URL}/devices/${macAddress}`, {
     method: 'PATCH',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ roomId }),

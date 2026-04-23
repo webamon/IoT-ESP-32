@@ -1,3 +1,4 @@
 export const BASE_URL = import.meta.env.VITE_API_URL ?? 'http://localhost:3000'
-export const USER_ID = import.meta.env.VITE_USER_ID ?? ''
+export const USER_ID =
+  import.meta.env.VITE_USER_ID ?? 'bdc9760f-0964-43c0-b0b8-7efe97210aae'
 export const DEFAULT_DEVICE_ID = import.meta.env.VITE_DEFAULT_DEVICE_ID ?? ''

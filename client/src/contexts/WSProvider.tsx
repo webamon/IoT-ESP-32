@@ -34,7 +34,9 @@ export function WSProvider({ children }: { children: ReactNode }) {
     return () => handlersRef.current.delete(handler)
   }
 
-  return <WSContext.Provider value={{ subscribe }}>{children}</WSContext.Provider>
+  return (
+    <WSContext.Provider value={{ subscribe }}>{children}</WSContext.Provider>
+  )
 }
 
 export function useWS() {
