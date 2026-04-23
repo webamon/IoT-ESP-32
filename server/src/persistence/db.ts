@@ -7,6 +7,7 @@ import { config } from '../config.js'
 /* Domain */
 import type { Room } from '../domain/room.js'
 import type { Device, DeviceRoom } from '../domain/device.js'
+import { User } from '../domain/user.js'
 
 const pool = new pg.Pool(config.db)
 
@@ -90,4 +91,25 @@ export async function updateDeviceRoom(
   )
 
   return result.rows[0]
+}
+
+export async function getUserByEmail(email: string): Promise<User | null> {
+  const result = await pool.query<User>(
+    `SELECT id, email, password_hash as password FROM users WHERE email= $1`,
+    [email]
+  )
+
+  return result.rows[0] ?? null
+}
+
+export async function createUser(
+  email: string,
+  passwordHash: string
+): Promise<User | null> {
+  const result = await pool.query<User>(
+    `INSERT INTO users (email, password_hash) VALUES ($1,$2) RETURNING id, email, password_hash as password`,
+    [email, passwordHash]
+  )
+
+  return result.rows[0] ?? null
 }
