@@ -1,6 +1,7 @@
 /* Internal */
 import { getMeasures, saveMeasure } from '../persistence/db.js'
 
+import { deviceExist } from './device-service.js'
 /* Domain */
 import type { SensorData } from '../domain/sensor.js'
 
@@ -9,7 +10,11 @@ export type { SensorData }
 export async function handleSensorData(
   deviceId: string,
   measures: Record<string, number>
-): Promise<SensorData[]> {
+): Promise<SensorData[] | null> {
+  if (!(await deviceExist(deviceId))) {
+    console.warn(`device ${deviceId} inconnu ignoré`)
+    return null
+  }
   return Promise.all(
     Object.entries(measures).map(async ([metric, value]) => {
       const time = await saveMeasure(deviceId, metric, value)
