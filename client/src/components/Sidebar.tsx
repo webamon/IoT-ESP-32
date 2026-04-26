@@ -6,15 +6,13 @@ import {
   ListItemIcon,
   ListItemText,
 } from '@mui/material'
-import DashboardIcon from '@mui/icons-material/Dashboard'
 import MeetingRoomIcon from '@mui/icons-material/MeetingRoom'
 import { NavLink, useLocation } from 'react-router-dom'
 
 const DRAWER_WIDTH = 220
 
 const NAV_ITEMS = [
-  { label: 'Dashboard', icon: <DashboardIcon />, to: '/' },
-  { label: 'Pièces', icon: <MeetingRoomIcon />, to: '/rooms' },
+  { label: 'Pièces', icon: <MeetingRoomIcon />, to: '/' },
 ]
 
 export function Sidebar() {

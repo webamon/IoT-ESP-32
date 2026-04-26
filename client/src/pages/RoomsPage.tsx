@@ -1,5 +1,4 @@
 import { Box, Typography } from '@mui/material'
-import { Outlet } from 'react-router-dom'
 import { UserRooms } from '../components/UserRooms'
 import { UserRoomForm } from '../components/UserRoomForm'
 
@@ -13,7 +12,6 @@ export function RoomsPage({ userId }: Props) {
       <Typography variant="h5">Pièces</Typography>
       <UserRoomForm userId={userId} />
       <UserRooms userId={userId} />
-      <Outlet />
     </Box>
   )
 }

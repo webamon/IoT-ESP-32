@@ -8,9 +8,8 @@ import {
 } from '@mui/material'
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
 import { Sidebar } from './components/Sidebar'
-import { DashboardPage } from './pages/DashboardPage'
 import { RoomsPage } from './pages/RoomsPage'
-import { RoomDetailPage } from './pages/RoomDetailPage'
+import { RoomPage } from './pages/RoomPage'
 import { useWsEvents } from './hooks/useWsEvents'
 import { USER_ID } from './api/config'
 import { LoginPage } from './pages/LoginPage'
@@ -35,13 +34,8 @@ function Layout() {
           <Toolbar />
         </AppBar>
         <Routes>
-          <Route path="/" element={<DashboardPage />} />
-          <Route path="/rooms" element={<RoomsPage userId={USER_ID} />}>
-            <Route
-              path=":roomId"
-              element={<RoomDetailPage userId={USER_ID} />}
-            />
-          </Route>
+          <Route path="/" element={<RoomsPage userId={USER_ID} />} />
+          <Route path="/rooms/:roomId" element={<RoomPage userId={USER_ID} />} />
         </Routes>
       </Box>
     </Box>
