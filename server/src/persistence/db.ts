@@ -32,6 +32,15 @@ export async function saveMeasure(
   return result.rows[0].time
 }
 
+export async function getDevicesById(deviceId: string) {
+  const result = await pool.query<User>(
+    `SELECT mac_address, room_id FROM devices WHERE mac_address = $1`,
+    [deviceId]
+  )
+
+  return result.rows[0] ?? null
+}
+
 export async function getMeasures(
   deviceId: string,
   metric: string,
@@ -81,9 +90,16 @@ export async function getDevicesByRoom(roomId: string): Promise<Device[]> {
   return result.rows
 }
 
+export async function getUnassignedDevices(): Promise<Device[]> {
+  const result = await pool.query<Device>(
+    `SELECT mac_address FROM devices WHERE room_id IS NULL`
+  )
+  return result.rows
+}
+
 export async function updateDeviceRoom(
   macAddress: string,
-  roomId: string
+  roomId: string | null
 ): Promise<DeviceRoom> {
   const result = await pool.query<DeviceRoom>(
     `UPDATE devices SET room_id = $1 WHERE mac_address = $2 RETURNING mac_address, room_id`,

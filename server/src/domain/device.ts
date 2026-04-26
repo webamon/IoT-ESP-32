@@ -4,5 +4,5 @@ export interface Device {
 
 export interface DeviceRoom {
   mac_address: string
-  room_id: string
+  room_id: string | null
 }
